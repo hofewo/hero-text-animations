@@ -1,0 +1,123 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
+  </head>
+  <body>
+    <div class="slide1">
+      <h2 class="ml11 line1">
+        <span class="text-wrapper">
+          <span class="line line1"></span>
+          <span class="letters">Inventory management</span>
+        </span>
+      </h2>
+
+      <h2 class="ml11 line2">
+        <span class="text-wrapper">
+          <span class="line line2"></span>
+          <span class="letters">Manage your orders</span>
+        </span>
+      </h2>
+    </div>
+
+    <div class="slide2">
+      <h2 class="ml11 line1">
+        <span class="text-wrapper">
+          <span class="line line1"></span>
+          <span class="letters">Order picker</span>
+        </span>
+      </h2>
+
+      <h2 class="ml11 line2">
+        <span class="text-wrapper">
+          <span class="line line2"></span>
+          <span class="letters">Manage your products</span>
+        </span>
+      </h2>
+    </div>
+
+    <script>
+      function animateLine({ lineNumber, slideNumber }) {
+        const slideClass = `.slide${slideNumber}`;
+        const lineClass = `.line${lineNumber}`;
+        const lineDelay = lineNumber * 1000;
+        // Wrap every letter in a span
+        var textWrapper = document.querySelector(`${slideClass} .ml11${lineClass} .letters`);
+        textWrapper.innerHTML = textWrapper.textContent.replace(
+          /([^\x00-\x80]|\w)/g,
+          "<span class='letter'>$&</span>"
+        );
+
+        anime
+          .timeline({ loop: true })
+          .add({
+            targets: `${slideClass} .ml11${lineClass} .line`,
+            scaleY: [0, 1],
+            opacity: [0.5, 1],
+            easing: "easeOutExpo",
+            duration: 700 + lineDelay,
+          })
+          .add({
+            targets: `${slideClass} .ml11${lineClass} .line`,
+            translateX: [
+              0,
+              document
+                .querySelector(`.ml11${lineClass} .letters`)
+                .getBoundingClientRect().width + 10,
+            ],
+            easing: "easeOutExpo",
+            duration: 700,
+            delay: 100,
+          })
+          .add({
+            targets: `${slideClass} .ml11${lineClass} .letter`,
+            opacity: [0, 1],
+            easing: "easeOutExpo",
+            duration: 50,
+            offset: "-=775",
+            delay: (el, i) => 34 * (i + 1),
+          })
+          .add({
+            targets: `${slideClass} .ml11${lineClass}`,
+            opacity: 1,
+            duration: 1000,
+            easing: "easeOutExpo",
+            delay: 5000,
+          })
+          .add({
+            targets: `${slideClass} .ml11${lineClass}`,
+            width: 0,
+            height: 0,
+            duration: 1000 + lineDelay,
+          });
+      }
+
+      function animateSlide(slideNumber) {
+        const slideClass = `.slide${slideNumber}`;
+        const slideDuration = 5000;
+        
+        anime
+          .timeline({ loop: true })
+          .add({
+            targets: slideClass,
+            opacity: 1,
+            duration: slideDuration,
+            easing: "easeOutExpo",
+          })
+          .add({
+            targets: slideClass,
+            opacity: 0,
+            duration: slideDuration,
+            easing: "easeOutExpo",
+            delay: 5000,
+          });
+
+        animateLine({ lineNumber: 1, slideNumber });
+        animateLine({ lineNumber: 2, slideNumber });
+      }
+
+      animateSlide(1);
+      animateSlide(2);
+    </script>
+  </body>
+</html>
